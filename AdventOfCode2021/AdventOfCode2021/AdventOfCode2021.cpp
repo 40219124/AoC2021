@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <queue>
 
 using namespace std;
 
@@ -31,7 +32,46 @@ void D1P1() {
 	}
 }
 
-function<void(void)> Problems[25][2] = { {D1P1, } };
+void D1P2() {
+	int total = 0;
+	queue<int> values;
+	int queueLength = 3;
+
+	ifstream file(FileFolder + "D1P1.txt");
+	if (file.is_open()) {
+		string line;
+		int last = 0;
+
+		for (int i = 0; i < queueLength; ++i) {
+			if (getline(file, line)) {
+				int val = stoi(line);
+				values.push(val);
+				last += val;
+			}
+			else {
+				return;
+			}
+		}
+
+		while (getline(file, line)) {
+			int val = stoi(line);
+
+			int curr = last - values.front() + val;
+
+			values.push(val);
+			values.pop();
+
+			if (curr > last) {
+				total++;
+			}
+			last = curr;
+		}
+
+		cout << total << endl;
+	}
+}
+
+function<void(void)> Problems[25][2] = { {D1P1, D1P2 } };
 
 int main(int argc, char** argv)
 {

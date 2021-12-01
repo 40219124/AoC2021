@@ -1,20 +1,50 @@
 // AdventOfCode2021.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+#include <functional>
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
 
-int main()
-{
-    std::cout << "Hello World!\n";
+using namespace std;
+
+const string FileFolder = "D:\\Repos\\AoC2021\\Inputs\\";
+
+void D1P1() {
+	int total = 0;
+	ifstream file(FileFolder + "D1P1.txt");
+	if (file.is_open()) {
+		string line;
+		getline(file, line);
+		int last = stoi(line);
+
+		while (getline(file, line)) {
+			int curr = stoi(line);
+			if (curr > last) {
+				total++;
+			}
+			last = curr;
+		}
+
+		cout << total << endl;
+	}
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+function<void(void)> Problems[25][2] = { {D1P1, } };
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+int main(int argc, char** argv)
+{
+	vector<string> args;
+	for (int i = 1; i < argc; ++i) {
+		string arg = "";
+		char c = argv[i][0];
+		for (int j = 1; c != '\0'; ++j) {
+			arg += c;
+			c = (argv[i][j]);
+		}
+		args.push_back(arg);
+	}
+
+	Problems[stoi(args[0]) - 1][stoi(args[1]) - 1]();
+}

@@ -71,7 +71,35 @@ void D1P2() {
 	}
 }
 
-function<void(void)> Problems[25][2] = { {D1P1, D1P2 } };
+void D2P1() {
+	ifstream file(FileFolder + "D2P1.txt");
+	if (file.is_open()) {
+		string line;
+		int h = 0, v = 0;
+		int* axis;
+		int dir = 1;
+
+		while (getline(file, line)) {
+			dir = 1;
+			if (line[0] == 'f') {
+				axis = &h;
+			}
+			else {
+				axis = &v;
+				if (line[0] == 'u') {
+					dir = -1;
+				}
+			}
+
+			(*axis) += atoi(line.substr(line.length() - 1).c_str()) * dir;
+		}
+
+		cout << "height: " << h << ", depth: " << v << endl;
+		cout << "answer: " << h * v << endl;
+	}
+}
+
+function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, } };
 
 int main(int argc, char** argv)
 {

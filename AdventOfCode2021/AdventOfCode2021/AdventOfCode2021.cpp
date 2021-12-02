@@ -91,7 +91,7 @@ void D2P1() {
 				}
 			}
 
-			(*axis) += atoi(line.substr(line.length() - 1).c_str()) * dir;
+			(*axis) += (line[line.length() - 1] - '0') * dir;
 		}
 
 		cout << "height: " << h << ", depth: " << v << endl;
@@ -106,7 +106,7 @@ void D2P2() {
 		int h = 0, v = 0, a = 0;
 
 		while (getline(file, line)) {
-			int move = atoi(line.substr(line.length() - 1).c_str());
+			int move = line[line.length() - 1] - '0';
 			if (line[0] == 'f') {
 				h += move;
 				v += move * a;

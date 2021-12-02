@@ -104,23 +104,18 @@ void D2P2() {
 	if (file.is_open()) {
 		string line;
 		int h = 0, v = 0, a = 0;
-		int dir = 1;
 
 		while (getline(file, line)) {
-			dir = 1;
-			if (line[0] != 'f') {
-				if (line[0] == 'u') {
-					dir = -1;
-				}
-			}
-
 			int move = atoi(line.substr(line.length() - 1).c_str());
 			if (line[0] == 'f') {
 				h += move;
 				v += move * a;
 			}
 			else {
-				a += move * dir;
+				if (line[0] == 'u') {
+					move *= -1;
+				}
+				a += move;
 			}
 		}
 

@@ -99,7 +99,37 @@ void D2P1() {
 	}
 }
 
-function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, } };
+void D2P2() {
+	ifstream file(FileFolder + "D2P1.txt");
+	if (file.is_open()) {
+		string line;
+		int h = 0, v = 0, a = 0;
+		int dir = 1;
+
+		while (getline(file, line)) {
+			dir = 1;
+			if (line[0] != 'f') {
+				if (line[0] == 'u') {
+					dir = -1;
+				}
+			}
+
+			int move = atoi(line.substr(line.length() - 1).c_str());
+			if (line[0] == 'f') {
+				h += move;
+				v += move * a;
+			}
+			else {
+				a += move * dir;
+			}
+		}
+
+		cout << "height: " << h << ", depth: " << v << endl;
+		cout << "answer: " << h * v << endl;
+	}
+}
+
+function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2} };
 
 int main(int argc, char** argv)
 {

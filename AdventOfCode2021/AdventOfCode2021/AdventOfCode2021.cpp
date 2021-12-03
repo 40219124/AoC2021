@@ -124,7 +124,37 @@ void D2P2() {
 	}
 }
 
-function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2} };
+void D3P1() {
+	ifstream file(FileFolder + "D3P1.txt");
+	if (file.is_open()) {
+		string line;
+		const int bitCount = 12;
+		int bitSum[bitCount] = {};
+		int lineCount = 0;
+		while (getline(file, line)) {
+			if (line.size() >= bitCount) {
+				lineCount++;
+				for (int i = 0; i < bitCount; ++i) {
+					bitSum[i] += line[i] - '0';
+				}
+			}
+		}
+
+		int gamma = 0, epsilon = 0, bVal = 1;
+		for (int i = bitCount - 1; i >= 0; --i) {
+
+			bool oneCommon = ((bitSum[i] * 2) / lineCount) >= 1;
+			gamma += oneCommon * bVal;
+			epsilon += (!oneCommon) * bVal;
+			bVal *= 2;
+		}
+		cout << "gamma: " << gamma << ", epsilon: " << epsilon << endl;
+		cout << "answer: " << gamma * epsilon << endl;
+	}
+}
+
+
+function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2}, {D3P1,} };
 
 int main(int argc, char** argv)
 {

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <chrono>
 #include <queue>
 
 using namespace std;
@@ -454,5 +455,8 @@ int main(int argc, char** argv)
 		args.push_back(arg);
 	}
 
+	chrono::steady_clock::time_point start = chrono::high_resolution_clock::now();
 	Problems[stoi(args[0]) - 1][stoi(args[1]) - 1]();
+	chrono::steady_clock::time_point end = chrono::high_resolution_clock::now();
+	cout << "execution time: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() / 1000.0f << "seconds" << endl;
 }

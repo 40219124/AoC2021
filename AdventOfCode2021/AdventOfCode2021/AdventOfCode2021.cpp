@@ -164,7 +164,7 @@ string D3P2FindOneCode(vector<string>* oldList, vector<string>* newList, const i
 		}
 		oneDoubleCount = lineCount = 0;
 
-		for (int i = 0; i < oldList->size(); ++i) {
+		for (size_t i = 0; i < oldList->size(); ++i) {
 			if ((*oldList)[i][b] == common) {
 				newList->push_back((*oldList)[i]);
 				if (b + 1 < bitCount) {
@@ -338,9 +338,9 @@ void D4P1() {
 
 		// Check input
 		int numsChecked = 0;
-		for (int i = 0; i < inputNumsS.size(); ++i) {
+		for (size_t i = 0; i < inputNumsS.size(); ++i) {
 			char numS[3];
-			for (int j = 0; ; ++j) {
+			for (size_t j = 0; ; ++j) {
 				if (inputNumsS[j + i] < '0' || inputNumsS[j + i] > '9' || (j + i) >= inputNumsS.size()) {
 					i += j;
 					numS[j] = '\0';
@@ -403,9 +403,9 @@ void D4P2() {
 
 		// Check input
 		int numsChecked = 0;
-		for (int i = 0; i < inputNumsS.size(); ++i) {
+		for (size_t i = 0; i < inputNumsS.size(); ++i) {
 			char numS[3];
-			for (int j = 0; ; ++j) {
+			for (size_t j = 0; ; ++j) {
 				if (inputNumsS[j + i] < '0' || inputNumsS[j + i] > '9' || (j + i) >= inputNumsS.size()) {
 					i += j;
 					numS[j] = '\0';
@@ -418,7 +418,7 @@ void D4P2() {
 			for (BingoCard* bc : cardsByNumber[num]) {
 				bc->CheckNum(num);
 				if (numsChecked >= bingoSize && bc->IsComplete()) {
-					for (int cardI = 0; cardI < cards.size(); ++cardI) {
+					for (size_t cardI = 0; cardI < cards.size(); ++cardI) {
 						if (cards[cardI] == bc) {
 							if (!cardStates[cardI]) {
 								cardStates[cardI] = cards[cardI]->IsComplete();

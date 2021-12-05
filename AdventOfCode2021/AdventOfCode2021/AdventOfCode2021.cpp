@@ -210,8 +210,160 @@ void D3P2() {
 	}
 }
 
+class BingoCard {
+public:
+	bool CheckNum(int num);
+	bool IsComplete();
+	void AddNum(int num, int x, int y);
+	int* GetCompleteSet() { return completeSet; }
+	int SumOfUnchecked();
+	BingoCard() {}
+private:
+	const static int bingoSize = 5;
+	int bingoNums[bingoSize][bingoSize] = {};
+	bool bingoState[bingoSize][bingoSize] = {};
+	int completeSet[bingoSize] = {};
+	bool isComplete = false;
+};
 
-function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2}, {D3P1, D3P2} };
+bool BingoCard::CheckNum(int num) {
+	for (int y = 0; y < bingoSize; ++y) {
+		for (int x = 0; x < bingoSize; ++x) {
+			if (bingoNums[x][y] == num) {
+				bingoState[x][y] = true;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool BingoCard::IsComplete() {
+	if (isComplete) {
+		return isComplete;
+	}
+	// Check rows
+	for (int y = 0; y < bingoSize; ++y) {
+		bool fullRow = true;
+		// Step across rows
+		for (int x = 0; x < bingoSize; ++x) {
+			fullRow = fullRow && bingoState[x][y];
+			// Check columns from bottom row
+			if (y == 0 && bingoState[x][y]) {
+				bool fullColumn = true;
+				for (int y2 = 1; y2 < bingoSize; ++y2) {
+					fullColumn = fullColumn && bingoState[x][y2];
+					if (!fullColumn) {
+						break;
+					}
+				}
+				if (fullColumn) {
+					isComplete = true;
+					for (int y2 = 0; y2 < bingoSize; ++y2) {
+						completeSet[y2] = bingoNums[x][y2];
+					}
+					return isComplete;
+				}
+			}
+			else if (y != 0 && !fullRow) {
+				break;
+			}
+		}
+		if (fullRow) {
+			isComplete = true;
+			for (int x = 0; x < bingoSize; ++x) {
+				completeSet[x] = bingoNums[x][y];
+			}
+			return isComplete;
+		}
+	}
+	return isComplete;
+}
+
+void BingoCard::AddNum(int num, int x, int y) {
+	if (x < 0 || y < 0 || x >= bingoSize || y >= bingoSize) {
+		cout << "incorrect number coords, x: " << x << ", y: " << y << endl;
+		return;
+	}
+	bingoNums[x][y] = num;
+	bingoState[x][y] = false;
+}
+
+int BingoCard::SumOfUnchecked() {
+	int sum = 0;
+	for (int y = 0; y < bingoSize; ++y) {
+		for (int x = 0; x < bingoSize; ++x) {
+			if (!bingoState[x][y]) {
+				sum += bingoNums[x][y];
+			}
+		}
+	}
+	return sum;
+}
+
+void D4P1() {
+	ifstream file(FileFolder + "D4P1.txt");
+	if (file.is_open()) {
+		string line;
+		getline(file, line);
+		string inputNumsS = line;
+
+		vector<BingoCard*> cardsByNumber[100] = {};
+		vector<BingoCard*> cards;
+		const int bingoSize = 5;
+
+		// Create bingo cards
+		while (getline(file, line)) {
+			if (line == "") {
+				continue;
+			}
+
+			cards.push_back(new BingoCard());
+			BingoCard* card = cards[cards.size() - 1];
+			int x = 0, y = bingoSize - 1;
+			while (line != "" && y >= 0) {
+				while (x < bingoSize) {
+					int num = atoi(line.substr(x * 3, 2).c_str());
+					card->AddNum(num, x, y);
+					cardsByNumber[num].push_back(card);
+					x++;
+				}
+				x = 0;
+				y--;
+				getline(file, line);
+			}
+		}
+		cout << "card creation successful" << endl;
+
+		// Check input
+		int numsChecked = 0;
+		for (int i = 0; i < inputNumsS.size(); ++i) {
+			char numS[3];
+			for (int j = 0; ; ++j) {
+				if (inputNumsS[j + i] < '0' || inputNumsS[j + i] > '9' || (j + i) >= inputNumsS.size()) {
+					i += j;
+					numS[j] = '\0';
+					break;
+				}
+				numS[j] = inputNumsS[j + i];
+			}
+			int num = atoi(numS);
+			numsChecked++;
+			for (BingoCard* bc : cardsByNumber[num]) {
+				bc->CheckNum(num);
+				if (numsChecked >= bingoSize && bc->IsComplete()) {
+					int sum = bc->SumOfUnchecked();
+					cout << "sum of unchecked: " << sum << ", final num: " << num << endl;
+					cout << "answer: " << sum * num << endl;
+					return;
+				}
+			}
+		}
+		cout << "no winners apparently" << endl;
+	}
+}
+
+function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2}, {D3P1, D3P2}, {D4P1,} };
 
 int main(int argc, char** argv)
 {

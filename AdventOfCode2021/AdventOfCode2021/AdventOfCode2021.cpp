@@ -363,7 +363,83 @@ void D4P1() {
 	}
 }
 
-function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2}, {D3P1, D3P2}, {D4P1,} };
+void D4P2() {
+	ifstream file(FileFolder + "D4P1.txt");
+	if (file.is_open()) {
+		string line;
+		getline(file, line);
+		string inputNumsS = line;
+
+		vector<BingoCard*> cardsByNumber[100] = {};
+		vector<BingoCard*> cards;
+		vector<bool> cardStates;
+		int completeCardCount = 0;
+		const int bingoSize = 5;
+
+		// Create bingo cards
+		while (getline(file, line)) {
+			if (line == "") {
+				continue;
+			}
+
+			cards.push_back(new BingoCard());
+			cardStates.push_back(false);
+			BingoCard* card = cards[cards.size() - 1];
+			int x = 0, y = bingoSize - 1;
+			while (line != "" && y >= 0) {
+				while (x < bingoSize) {
+					int num = atoi(line.substr(x * 3, 2).c_str());
+					card->AddNum(num, x, y);
+					cardsByNumber[num].push_back(card);
+					x++;
+				}
+				x = 0;
+				y--;
+				getline(file, line);
+			}
+		}
+		cout << "card creation successful" << endl;
+
+		// Check input
+		int numsChecked = 0;
+		for (int i = 0; i < inputNumsS.size(); ++i) {
+			char numS[3];
+			for (int j = 0; ; ++j) {
+				if (inputNumsS[j + i] < '0' || inputNumsS[j + i] > '9' || (j + i) >= inputNumsS.size()) {
+					i += j;
+					numS[j] = '\0';
+					break;
+				}
+				numS[j] = inputNumsS[j + i];
+			}
+			int num = atoi(numS);
+			numsChecked++;
+			for (BingoCard* bc : cardsByNumber[num]) {
+				bc->CheckNum(num);
+				if (numsChecked >= bingoSize && bc->IsComplete()) {
+					for (int cardI = 0; cardI < cards.size(); ++cardI) {
+						if (cards[cardI] == bc) {
+							if (!cardStates[cardI]) {
+								cardStates[cardI] = cards[cardI]->IsComplete();
+								completeCardCount++;
+							}
+							if (completeCardCount == cards.size()) {
+								int sum = cards[cardI]->SumOfUnchecked();
+								cout << "sum of unchecked: " << sum << ", final num: " << num << endl;
+								cout << "answer: " << sum * num << endl;
+								return;
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+		cout << "no winners apparently" << endl;
+	}
+}
+
+function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2}, {D3P1, D3P2}, {D4P1, D4P2} };
 
 int main(int argc, char** argv)
 {

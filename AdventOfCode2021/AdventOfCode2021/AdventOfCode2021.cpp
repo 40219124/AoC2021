@@ -440,7 +440,61 @@ void D4P2() {
 	}
 }
 
-function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2}, {D3P1, D3P2}, {D4P1, D4P2} };
+void ParseVentPositions(int* positions, string line) {
+	char numString[4] = { '\0','\0','\0','\0' };
+	for (size_t i = 0, c = 0, p = 0; i <= line.size(); ++i) {
+		if (i != line.size() && line[i] >= '0' && line[i] <= '9') {
+			numString[c] = line[i];
+			c++;
+		}
+		else if (numString[0] != '\0') {
+			numString[c] = '\0';
+			int num = atoi(numString);
+			positions[p] = num;
+			p++;
+			c = 0;
+			for (int reset = 0; reset < 4; ++reset) {
+				numString[reset] = '\0';
+			}
+		}
+	}
+}
+
+int* GetTileVal(int* floor, int x, int y, int floorWidth) {
+	return &(floor[y * floorWidth + x]);
+}
+
+void D5P1() {
+	ifstream file(FileFolder + "D5P1.txt");
+	if (file.is_open()) {
+		string line;
+
+		const int floorWidth = 1000;
+		int* floor = new int[floorWidth * floorWidth]{};
+		int overlapPoints = 0;
+
+		while (getline(file, line)) {
+			int positions[4];
+			ParseVentPositions(&(positions[0]), line);
+			if (positions[0] == positions[2] || positions[1] == positions[3]) {
+				int xChange = positions[0] == positions[2] ? 0 : positions[2] > positions[0] ? 1 : -1;
+				int yChange = positions[1] == positions[3] ? 0 : positions[3] > positions[1] ? 1 : -1;
+				for (int x = positions[0], y = positions[1]; !(x == (positions[2] + xChange) && y == (positions[3] + yChange)); x += xChange, y += yChange) {
+					int* tileVal = GetTileVal(floor, x, y, floorWidth);
+					(*tileVal)++;
+					if ((*tileVal) == 2) {
+						overlapPoints++;
+					}
+				}
+			}
+		}
+
+		cout << "overlap points: " << overlapPoints << endl;
+		delete [] floor;
+	}
+}
+
+function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2}, {D3P1, D3P2}, {D4P1, D4P2}, {D5P1, } };
 
 int main(int argc, char** argv)
 {

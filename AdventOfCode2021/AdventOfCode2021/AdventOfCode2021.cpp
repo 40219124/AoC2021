@@ -582,6 +582,7 @@ void D6(int part) {
 			fishCount += fishPregProg[i];
 		}
 
+		cout.precision(0);
 		cout << fixed << "fish after " << daysToRun << " days: " << fishCount << endl;
 		cout << defaultfloat;
 	}

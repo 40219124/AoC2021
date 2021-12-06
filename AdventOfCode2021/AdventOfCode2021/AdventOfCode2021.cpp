@@ -13,6 +13,7 @@ using namespace std;
 
 const string FileFolder = "D:\\Repos\\AoC2021\\Inputs\\";
 
+
 void D1P1() {
 	int total = 0;
 	ifstream file(FileFolder + "D1P1.txt");
@@ -72,6 +73,8 @@ void D1P2() {
 	}
 }
 
+void D1(int part) {}
+
 void D2P1() {
 	ifstream file(FileFolder + "D2P1.txt");
 	if (file.is_open()) {
@@ -124,6 +127,8 @@ void D2P2() {
 		cout << "answer: " << h * v << endl;
 	}
 }
+
+void D2(int part) {}
 
 void D3P1() {
 	ifstream file(FileFolder + "D3P1.txt");
@@ -210,6 +215,8 @@ void D3P2() {
 		cout << "answer: " << o2 * co2 << endl;
 	}
 }
+
+void D3(int part) {}
 
 class BingoCard {
 public:
@@ -440,6 +447,8 @@ void D4P2() {
 	}
 }
 
+void D4(int part) {}
+
 void ParseVentPositions(int* positions, string line) {
 	char numString[4] = { '\0','\0','\0','\0' };
 	for (size_t i = 0, c = 0, p = 0; i <= line.size(); ++i) {
@@ -522,6 +531,8 @@ void D5P2() {
 	}
 }
 
+void D5(int part) {}
+
 void D6P1() {
 	ifstream file(FileFolder + "D6P1.txt");
 	if (file.is_open()) {
@@ -587,7 +598,10 @@ void D6P2() {
 	}
 }
 
-function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2}, {D3P1, D3P2}, {D4P1, D4P2}, {D5P1, D5P2 }, {D6P1, D6P2} };
+void D6(int part) {}
+
+function<void(void)> ProblemsDeprecated[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2}, {D3P1, D3P2}, {D4P1, D4P2}, {D5P1, D5P2 }, {D6P1, D6P2} };
+function<void(int)> Problems[25] = { D1,D2,D3,D4,D5,D6, };
 
 int main(int argc, char** argv)
 {
@@ -603,7 +617,7 @@ int main(int argc, char** argv)
 	}
 
 	chrono::steady_clock::time_point start = chrono::high_resolution_clock::now();
-	Problems[stoi(args[0]) - 1][stoi(args[1]) - 1]();
+	ProblemsDeprecated[stoi(args[0]) - 1][stoi(args[1]) - 1]();
 	chrono::steady_clock::time_point end = chrono::high_resolution_clock::now();
 	cout << "execution time: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() / 1000.0f << "seconds" << endl;
 }

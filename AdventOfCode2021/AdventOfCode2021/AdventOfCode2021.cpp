@@ -554,74 +554,36 @@ void D5(int part) {
 	}
 }
 
-void D6P1(ifstream& file) {
-	string line;
-	getline(file, line);
-
-	const int maxGestation = 9, regGestation = 7;
-	int daysToRun = 80;
-	int fishPregProg[maxGestation] = {};
-
-	for (size_t i = 0; i < line.size(); i += 2) {
-		fishPregProg[line[i] - '0']++;
-	}
-
-	for (size_t t = 0; t < daysToRun; ++t) {
-		int zeroCount = fishPregProg[0];
-		for (int i = 1; i < maxGestation; ++i) {
-			fishPregProg[i - 1] = fishPregProg[i];
-		}
-		fishPregProg[regGestation - 1] += zeroCount;
-		fishPregProg[maxGestation - 1] = zeroCount;
-	}
-
-	int fishCount = 0;
-	for (size_t i = 0; i < maxGestation; ++i) {
-		fishCount += fishPregProg[i];
-	}
-
-	cout << "fish after " << daysToRun << " days: " << fishCount << endl;
-}
-
-void D6P2(ifstream& file) {
-	string line;
-	getline(file, line);
-
-	const int maxGestation = 9, regGestation = 7;
-	int daysToRun = 256;
-	double_t fishPregProg[maxGestation] = {};
-
-	for (size_t i = 0; i < line.size(); i += 2) {
-		fishPregProg[line[i] - '0']++;
-	}
-
-	for (size_t t = 0; t < daysToRun; ++t) {
-		double_t zeroCount = fishPregProg[0];
-		for (int i = 1; i < maxGestation; ++i) {
-			fishPregProg[i - 1] = fishPregProg[i];
-		}
-		fishPregProg[regGestation - 1] += zeroCount;
-		fishPregProg[maxGestation - 1] = zeroCount;
-	}
-
-	double_t fishCount = 0;
-	for (size_t i = 0; i < maxGestation; ++i) {
-		fishCount += fishPregProg[i];
-	}
-
-	cout << fixed << "fish after " << daysToRun << " days: " << fishCount << endl;
-	cout << defaultfloat;
-}
-
 void D6(int part) {
 	ifstream file(FileFolder + "D6P1.txt");
 	if (file.is_open()) {
-		if (part == 1) {
-			D6P1(file);
+		string line;
+		getline(file, line);
+
+		const int maxGestation = 9, regGestation = 7;
+		int daysToRun = part == 1 ? 80 : 256;
+		double_t fishPregProg[maxGestation] = {};
+
+		for (size_t i = 0; i < line.size(); i += 2) {
+			fishPregProg[line[i] - '0']++;
 		}
-		else {
-			D6P2(file);
+
+		for (size_t t = 0; t < daysToRun; ++t) {
+			double_t zeroCount = fishPregProg[0];
+			for (int i = 1; i < maxGestation; ++i) {
+				fishPregProg[i - 1] = fishPregProg[i];
+			}
+			fishPregProg[regGestation - 1] += zeroCount;
+			fishPregProg[maxGestation - 1] = zeroCount;
 		}
+
+		double_t fishCount = 0;
+		for (size_t i = 0; i < maxGestation; ++i) {
+			fishCount += fishPregProg[i];
+		}
+
+		cout << fixed << "fish after " << daysToRun << " days: " << fishCount << endl;
+		cout << defaultfloat;
 	}
 }
 

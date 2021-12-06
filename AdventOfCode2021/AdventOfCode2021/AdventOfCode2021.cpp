@@ -554,8 +554,41 @@ void D6P1() {
 	}
 }
 
+void D6P2() {
+	ifstream file(FileFolder + "D6P1.txt");
+	if (file.is_open()) {
+		string line;
+		getline(file, line);
+
+		const int maxGestation = 9, regGestation = 7;
+		int daysToRun = 256;
+		double_t fishPregProg[maxGestation] = {};
+
+		for (size_t i = 0; i < line.size(); i += 2) {
+			fishPregProg[line[i] - '0']++;
+		}
+
+		for (size_t t = 0; t < daysToRun; ++t) {
+			double_t zeroCount = fishPregProg[0];
+			for (int i = 1; i < maxGestation; ++i) {
+				fishPregProg[i - 1] = fishPregProg[i];
+			}
+			fishPregProg[regGestation - 1] += zeroCount;
+			fishPregProg[maxGestation - 1] = zeroCount;
+		}
+
+		double_t fishCount = 0;
+		for (size_t i = 0; i < maxGestation; ++i) {
+			fishCount += fishPregProg[i];
+		}
+
+		cout << fixed << "fish after " << daysToRun << " days: " << fishCount << endl;
+		cout << defaultfloat;
+	}
+}
 
 function<void(void)> Problems[25][2] = { {D1P1, D1P2 }, {D2P1, D2P2}, {D3P1, D3P2}, {D4P1, D4P2}, {D5P1, D5P2 }, {D6P1, D6P2} };
+
 int main(int argc, char** argv)
 {
 	vector<string> args;

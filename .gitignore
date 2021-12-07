@@ -2,3 +2,5 @@
 *.vcxproj*
 AdventOfCode2021/AdventOfCode2021/Debug
 AdventOfCode2021/Debug
+AdventOfCode2021/AdventOfCode2021/Release
+AdventOfCode2021/Release

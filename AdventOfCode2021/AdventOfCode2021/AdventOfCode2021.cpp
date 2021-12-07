@@ -8,6 +8,7 @@
 #include <string>
 #include <chrono>
 #include <queue>
+#include <map>
 
 using namespace std;
 
@@ -588,7 +589,73 @@ void D6(int part) {
 	}
 }
 
-function<void(int)> Problems[25] = { D1,D2,D3,D4,D5,D6, };
+int CalculateTotalCrabMovement(map<int, int>& positionCounts, int testPos) {
+	int displacement = 0;
+	for (pair<int, int> pair : positionCounts) {
+		int diff = pair.first - testPos;
+		if (diff < 0) {
+			diff *= -1;
+		}
+		displacement += diff * pair.second;
+	}
+	return displacement;
+}
+
+void D7(int part) {
+	ifstream file(FileFolder + "D7P1.txt");
+	if (file.is_open()) {
+		string line;
+		map<int, int> positionCounts = {};
+		int maxPos = INT16_MIN, minPos = INT16_MAX;
+
+		while (getline(file, line, ',')) {
+			int pos = stoi(line);
+			if (positionCounts.find(pos) == positionCounts.end()) {
+				positionCounts[pos] = 1;
+				if (pos > maxPos) {
+					maxPos = pos;
+				}
+				if (pos < minPos) {
+					minPos = pos;
+				}
+			}
+			else {
+				positionCounts[pos]++;
+			}
+		}
+
+		bool unfinished = true;
+		int maxPosCost = CalculateTotalCrabMovement(positionCounts, maxPos);
+		int minPosCost = CalculateTotalCrabMovement(positionCounts, minPos);
+		pair<int, int> cheapestPosAndCost = (minPosCost < maxPosCost ?
+			pair<int, int>{minPos, minPosCost} : pair<int, int>{ maxPos, maxPosCost });
+		while (unfinished) {
+			if (maxPos - minPos <= 2) {
+				pair<int, int> cheapestPosAndCost = (minPosCost < maxPosCost ?
+					pair<int, int>{minPos, minPosCost} : pair<int, int>{ maxPos, maxPosCost });
+				unfinished = false;
+				break;
+			}
+			int mid = (maxPos + minPos) / 2;
+			int midCost = CalculateTotalCrabMovement(positionCounts, mid);
+			if (midCost < cheapestPosAndCost.second) {
+				cheapestPosAndCost = pair<int, int>{ mid, midCost };
+			}
+			if (maxPosCost > minPosCost) {
+				maxPosCost = midCost;
+				maxPos = mid;
+			}
+			else {
+				minPosCost = midCost;
+				minPos = mid;
+			}
+		}
+
+		cout << "pos: " << cheapestPosAndCost.first << ", cost: " << cheapestPosAndCost.second << endl;
+	}
+}
+
+function<void(int)> Problems[25] = { D1,D2,D3,D4,D5,D6,D7, };
 
 int main(int argc, char** argv)
 {

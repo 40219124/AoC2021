@@ -589,12 +589,15 @@ void D6(int part) {
 	}
 }
 
-int CalculateTotalCrabMovement(map<int, int>& positionCounts, int testPos) {
+int CalculateTotalCrabMovement(map<int, int>& positionCounts, int testPos, bool triangularCost) {
 	int displacement = 0;
 	for (pair<int, int> pair : positionCounts) {
 		int diff = pair.first - testPos;
 		if (diff < 0) {
 			diff *= -1;
+		}
+		if (triangularCost) {
+			diff = (diff * (diff + 1)) / 2;
 		}
 		displacement += diff * pair.second;
 	}
@@ -624,20 +627,21 @@ void D7(int part) {
 			}
 		}
 
-		bool unfinished = true;
-		int maxPosCost = CalculateTotalCrabMovement(positionCounts, maxPos);
-		int minPosCost = CalculateTotalCrabMovement(positionCounts, minPos);
+		int maxPosCost = CalculateTotalCrabMovement(positionCounts, maxPos, part == 2);
+		int minPosCost = CalculateTotalCrabMovement(positionCounts, minPos, part == 2);
 		pair<int, int> cheapestPosAndCost = (minPosCost < maxPosCost ?
 			pair<int, int>{minPos, minPosCost} : pair<int, int>{ maxPos, maxPosCost });
+		bool unfinished = true;
 		while (unfinished) {
-			if (maxPos - minPos <= 2) {
+			if (maxPos - minPos <= 1) {
 				pair<int, int> cheapestPosAndCost = (minPosCost < maxPosCost ?
 					pair<int, int>{minPos, minPosCost} : pair<int, int>{ maxPos, maxPosCost });
 				unfinished = false;
 				break;
 			}
+
 			int mid = (maxPos + minPos) / 2;
-			int midCost = CalculateTotalCrabMovement(positionCounts, mid);
+			int midCost = CalculateTotalCrabMovement(positionCounts, mid, part == 2);
 			if (midCost < cheapestPosAndCost.second) {
 				cheapestPosAndCost = pair<int, int>{ mid, midCost };
 			}

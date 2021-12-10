@@ -659,7 +659,37 @@ void D7(int part) {
 	}
 }
 
-function<void(int)> Problems[25] = { D1,D2,D3,D4,D5,D6,D7, };
+void D8(int part) {
+	ifstream file(FileFolder + "D8P1.txt");
+	if (file.is_open()) {
+		string line;
+
+		int segmentCounts[7] = {};
+
+		while (getline(file, line, '|')) {
+			getline(file, line);
+
+			while (line.size() > 0) {
+				size_t charPos = line.find_first_of(" \n");
+				string segString = line.substr(0, charPos);
+				if (segString.size() > 0) {
+					segmentCounts[segString.size() - 1]++;
+				}
+				if (charPos != -1) {
+					line = line.substr(charPos+1);
+				}
+				else {
+					break;
+				}
+			}
+		}
+
+		int total = segmentCounts[1] + segmentCounts[2] + segmentCounts[3] + segmentCounts[6];
+		cout << "unique segment total: " << total << endl;
+	}
+}
+
+function<void(int)> Problems[25] = { D1,D2,D3,D4,D5,D6,D7,D8 };
 
 int main(int argc, char** argv)
 {
